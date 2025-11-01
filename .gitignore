@@ -1,0 +1,22 @@
+# Dépendances
+/vendor/
+
+# Configuration locale
+/config/database.php
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Cache
+/cache/
+/tmp/
+
+# Environnement
+.env
