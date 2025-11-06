@@ -1,0 +1,10 @@
+# Activation du module de réécriture
+RewriteEngine On
+
+# Redirection vers index.php pour toutes les requêtes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Désactiver l'affichage des dossiers
+Options -Indexes
