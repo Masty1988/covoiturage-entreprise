@@ -1,5 +1,7 @@
 # Vendor (Composer)
 /vendor/
+# Configuration sensible
+config/database.php
 
 # Environment
 .env
