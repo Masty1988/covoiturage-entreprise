@@ -1,0 +1,29 @@
+/*
+ * Styles personnalisés pour Covoiturage
+ * Les couleurs Bootstrap seront surchargées via Sass plus tard
+ */
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Table des trajets */
+.table th {
+    white-space: nowrap;
+}
+
+/* Cartes */
+.card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Boutons actions */
+.btn-sm {
+    margin: 2px;
+}
