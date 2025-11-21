@@ -1,10 +1,17 @@
 <?php
 /**
- * Définition des routes de l'application
+ * Definition des routes de l'application
  */
 
+use App\Controllers\TrajetController;
+use App\Controllers\AuthController;
+use App\Controllers\AdminController;
+
 // Page d'accueil - liste des trajets
-$router->get('/', 'TrajetController@index');
+$router->get('/', function() {
+    $controller = new TrajetController();
+    $controller->index();
+});
 
 // Authentification
 $router->get('/login', 'AuthController@showLogin');
