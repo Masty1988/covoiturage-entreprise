@@ -11,24 +11,24 @@
     <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/">Covoiturage</a>
+            <a class="navbar-brand" href="<?= BASE_URL ?>/">Covoiturage</a>
 
             <div class="navbar-nav ms-auto">
                 <?php if (isset($_SESSION['user'])): ?>
                     <?php if ($_SESSION['user']['role'] === 'admin'): ?>
                         <!-- Menu admin -->
-                        <a class="nav-link" href="/admin">Tableau de bord</a>
-                        <a class="nav-link" href="/admin/users">Utilisateurs</a>
-                        <a class="nav-link" href="/admin/agences">Agences</a>
-                        <a class="nav-link" href="/admin/trajets">Trajets</a>
+                        <a class="nav-link" href="<?= BASE_URL ?>/admin">Tableau de bord</a>
+                        <a class="nav-link" href="<?= BASE_URL ?>/admin/users">Utilisateurs</a>
+                        <a class="nav-link" href="<?= BASE_URL ?>/admin/agences">Agences</a>
+                        <a class="nav-link" href="<?= BASE_URL ?>/admin/trajets">Trajets</a>
                     <?php else: ?>
                         <!-- Menu utilisateur -->
-                        <a class="btn btn-light btn-sm me-2" href="/trajets/create">Proposer un trajet</a>
+                        <a class="btn btn-light btn-sm me-2" href="<?= BASE_URL ?>/trajets/create">Proposer un trajet</a>
                         <span class="nav-link"><?= htmlspecialchars($_SESSION['user']['prenom'] . ' ' . $_SESSION['user']['nom']) ?></span>
                     <?php endif; ?>
-                    <a class="btn btn-outline-light btn-sm" href="/logout">Déconnexion</a>
+                    <a class="btn btn-outline-light btn-sm" href="<?= BASE_URL ?>/logout">Deconnexion</a>
                 <?php else: ?>
-                    <a class="btn btn-light btn-sm" href="/login">Connexion</a>
+                    <a class="btn btn-light btn-sm" href="<?= BASE_URL ?>/login">Connexion</a>
                 <?php endif; ?>
             </div>
         </div>

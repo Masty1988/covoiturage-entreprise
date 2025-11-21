@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-body">
-        <form action="/trajets/store" method="POST">
+        <form action="<?= BASE_URL ?>/trajets/store" method="POST">
             <!-- Infos conducteur (lecture seule) -->
             <div class="row mb-3">
                 <div class="col-md-6">
@@ -68,7 +68,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Créer le trajet</button>
-            <a href="/" class="btn btn-secondary">Annuler</a>
+            <a href="<?= BASE_URL ?>/" class="btn btn-secondary">Annuler</a>
         </form>
     </div>
 </div>

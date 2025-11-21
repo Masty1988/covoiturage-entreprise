@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-body">
-        <form action="/trajets/<?= $trajet['id'] ?>/update" method="POST">
+        <form action="<?= BASE_URL ?>/trajets/<?= $trajet['id'] ?>/update" method="POST">
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="agence_depart_id" class="form-label">Ville de départ</label>
@@ -55,7 +55,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Enregistrer</button>
-            <a href="/" class="btn btn-secondary">Annuler</a>
+            <a href="<?= BASE_URL ?>/" class="btn btn-secondary">Annuler</a>
         </form>
     </div>
 </div>

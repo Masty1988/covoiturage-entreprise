@@ -35,8 +35,8 @@
                                 </button>
 
                                 <?php if ($user['id'] == $trajet['conducteur_id']): ?>
-                                    <a href="/trajets/<?= $trajet['id'] ?>/edit" class="btn btn-warning btn-sm">Modifier</a>
-                                    <form action="/trajets/<?= $trajet['id'] ?>/delete" method="POST" style="display:inline;">
+                                    <a href="<?= BASE_URL ?>/trajets/<?= $trajet['id'] ?>/edit" class="btn btn-warning btn-sm">Modifier</a>
+                                    <form action="<?= BASE_URL ?>/trajets/<?= $trajet['id'] ?>/delete" method="POST" style="display:inline;">
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Supprimer ce trajet ?')">Supprimer</button>
                                     </form>
                                 <?php endif; ?>

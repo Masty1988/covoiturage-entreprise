@@ -13,6 +13,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // Demarrage session
 session_start();
 
+// Base path pour les URLs
+define('BASE_URL', '/covoiturage-entreprise/public/index.php');
+
 // Routeur simple
 use App\Controllers\TrajetController;
 use App\Controllers\AuthController;
@@ -27,12 +30,10 @@ $basePath = '/covoiturage-entreprise/public';
 if (strpos($uri, $basePath) === 0) {
     $uri = substr($uri, strlen($basePath));
 }
-if (empty($uri)) {
-    $uri = '/';
-}
 
-// Enlever index.php si present
-$uri = str_replace('/index.php', '', $uri);
+// Enlever index.php (avec ou sans slash apres)
+$uri = preg_replace('#^/index\.php#', '', $uri);
+
 if (empty($uri)) {
     $uri = '/';
 }
