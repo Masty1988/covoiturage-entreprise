@@ -1,5 +1,6 @@
-# Dépendances
+# Dependances
 /vendor/
+/node_modules/
 
 # Configuration locale
 /config/database.php

@@ -1,0 +1,54 @@
+// Variables personnalisees KLAXON
+// A definir AVANT d'importer Bootstrap
+
+// Palette imposee
+$primary: #0074c7;     // Bleu principal
+$secondary: #00497c;   // Bleu fonce
+$success: #82b864;     // Vert
+$info: #0074c7;
+$warning: #f1f8fc;     // Bleu tres clair
+$danger: #cd2c2e;      // Rouge
+$light: #f1f8fc;       // Fond clair
+$dark: #384050;        // Gris fonce
+
+// Import Bootstrap
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+// Styles personnalises
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+// Navbar
+.navbar-brand {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+// Cards
+.card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+// Boutons
+.btn {
+    border-radius: 4px;
+}
+
+// Tables
+.table {
+    th {
+        background-color: $light;
+    }
+}
+
+// Footer
+footer {
+    margin-top: auto;
+}

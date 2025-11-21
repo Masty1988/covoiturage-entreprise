@@ -1,19 +1,21 @@
 <?php
 namespace App\Controllers;
 
-use App\Database;
-use PDO;
+use App\Models\Trajet;
+use App\Models\Agence;
 
 /**
  * Gestion des trajets
  */
 class TrajetController extends Controller
 {
-    private $db;
+    private $trajetModel;
+    private $agenceModel;
 
     public function __construct()
     {
-        $this->db = Database::getInstance()->getConnection();
+        $this->trajetModel = new Trajet();
+        $this->agenceModel = new Agence();
     }
 
     /**
@@ -21,21 +23,12 @@ class TrajetController extends Controller
      */
     public function index()
     {
-        // Récupère les trajets avec places dispo et date future
-        $sql = "SELECT t.*,
-                    dep.nom_ville as ville_depart,
-                    arr.nom_ville as ville_arrivee,
-                    u.nom, u.prenom, u.email, u.telephone
-                FROM trajets t
-                JOIN agences dep ON t.agence_depart_id = dep.id
-                JOIN agences arr ON t.agence_arrivee_id = arr.id
-                JOIN utilisateurs u ON t.conducteur_id = u.id
-                WHERE t.places_disponibles > 0
-                AND t.date_heure_depart > NOW()
-                ORDER BY t.date_heure_depart ASC";
+        $trajets = $this->trajetModel->all();
 
-        $stmt = $this->db->query($sql);
-        $trajets = $stmt->fetchAll();
+        // Filtre les trajets avec places dispo et date future
+        $trajets = array_filter($trajets, function($t) {
+            return $t['places_disponibles'] > 0 && strtotime($t['date_heure_depart']) > time();
+        });
 
         $this->view('trajets/index', [
             'trajets' => $trajets,
@@ -44,18 +37,16 @@ class TrajetController extends Controller
     }
 
     /**
-     * Formulaire de création
+     * Formulaire de creation
      */
     public function create()
     {
         if (!$this->isLogged()) {
-            $this->setFlash('error', 'Vous devez être connecté');
+            $this->setFlash('error', 'Vous devez etre connecte');
             $this->redirect('/login');
         }
 
-        // Liste des agences pour le select
-        $stmt = $this->db->query("SELECT * FROM agences ORDER BY nom_ville");
-        $agences = $stmt->fetchAll();
+        $agences = $this->agenceModel->all();
 
         $this->view('trajets/create', [
             'agences' => $agences,
@@ -72,41 +63,34 @@ class TrajetController extends Controller
             $this->redirect('/login');
         }
 
-        // Récupération des données du formulaire
         $agenceDepart = $_POST['agence_depart_id'] ?? '';
         $agenceArrivee = $_POST['agence_arrivee_id'] ?? '';
         $dateDepart = $_POST['date_heure_depart'] ?? '';
         $dateArrivee = $_POST['date_heure_arrivee'] ?? '';
         $places = $_POST['places_totales'] ?? '';
 
-        // Validations basiques
+        // Validations
         if ($agenceDepart == $agenceArrivee) {
-            $this->setFlash('error', 'Le départ et l\'arrivée doivent être différents');
+            $this->setFlash('error', 'Le depart et l\'arrivee doivent etre differents');
             $this->redirect('/trajets/create');
         }
 
         if (strtotime($dateArrivee) <= strtotime($dateDepart)) {
-            $this->setFlash('error', 'La date d\'arrivée doit être après le départ');
+            $this->setFlash('error', 'La date d\'arrivee doit etre apres le depart');
             $this->redirect('/trajets/create');
         }
 
-        // Insertion en base
-        $sql = "INSERT INTO trajets (agence_depart_id, agence_arrivee_id, date_heure_depart,
-                date_heure_arrivee, places_totales, places_disponibles, conducteur_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            $agenceDepart,
-            $agenceArrivee,
-            $dateDepart,
-            $dateArrivee,
-            $places,
-            $places, // places dispo = places totales au début
-            $this->getUser()['id']
+        // Creation via le model
+        $this->trajetModel->create([
+            'conducteur_id' => $this->getUser()['id'],
+            'agence_depart_id' => $agenceDepart,
+            'agence_arrivee_id' => $agenceArrivee,
+            'date_heure_depart' => $dateDepart,
+            'date_heure_arrivee' => $dateArrivee,
+            'places_totales' => $places
         ]);
 
-        $this->setFlash('success', 'Trajet créé avec succès');
+        $this->setFlash('success', 'Trajet cree avec succes');
         $this->redirect('/');
     }
 
@@ -119,25 +103,20 @@ class TrajetController extends Controller
             $this->redirect('/login');
         }
 
-        // Récupère le trajet
-        $stmt = $this->db->prepare("SELECT * FROM trajets WHERE id = ?");
-        $stmt->execute([$id]);
-        $trajet = $stmt->fetch();
+        $trajet = $this->trajetModel->find($id);
 
         if (!$trajet) {
-            $this->setFlash('error', 'Trajet non trouvé');
+            $this->setFlash('error', 'Trajet non trouve');
             $this->redirect('/');
         }
 
-        // Vérifie que c'est bien l'auteur (ou admin)
+        // Verifie que c'est bien l'auteur
         if ($trajet['conducteur_id'] != $this->getUser()['id'] && !$this->isAdmin()) {
             $this->setFlash('error', 'Vous ne pouvez pas modifier ce trajet');
             $this->redirect('/');
         }
 
-        // Liste des agences
-        $stmt = $this->db->query("SELECT * FROM agences ORDER BY nom_ville");
-        $agences = $stmt->fetchAll();
+        $agences = $this->agenceModel->all();
 
         $this->view('trajets/edit', [
             'trajet' => $trajet,
@@ -147,7 +126,7 @@ class TrajetController extends Controller
     }
 
     /**
-     * Met à jour un trajet
+     * Met a jour un trajet
      */
     public function update($id)
     {
@@ -155,17 +134,13 @@ class TrajetController extends Controller
             $this->redirect('/login');
         }
 
-        // Vérifie les droits
-        $stmt = $this->db->prepare("SELECT * FROM trajets WHERE id = ?");
-        $stmt->execute([$id]);
-        $trajet = $stmt->fetch();
+        $trajet = $this->trajetModel->find($id);
 
         if (!$trajet || ($trajet['conducteur_id'] != $this->getUser()['id'] && !$this->isAdmin())) {
-            $this->setFlash('error', 'Action non autorisée');
+            $this->setFlash('error', 'Action non autorisee');
             $this->redirect('/');
         }
 
-        // Récupération des données
         $agenceDepart = $_POST['agence_depart_id'] ?? '';
         $agenceArrivee = $_POST['agence_arrivee_id'] ?? '';
         $dateDepart = $_POST['date_heure_depart'] ?? '';
@@ -173,34 +148,21 @@ class TrajetController extends Controller
         $placesTotales = $_POST['places_totales'] ?? '';
         $placesDispo = $_POST['places_disponibles'] ?? '';
 
-        // Validations
         if ($agenceDepart == $agenceArrivee) {
-            $this->setFlash('error', 'Le départ et l\'arrivée doivent être différents');
+            $this->setFlash('error', 'Le depart et l\'arrivee doivent etre differents');
             $this->redirect('/trajets/' . $id . '/edit');
         }
 
-        // Mise à jour
-        $sql = "UPDATE trajets SET
-                agence_depart_id = ?,
-                agence_arrivee_id = ?,
-                date_heure_depart = ?,
-                date_heure_arrivee = ?,
-                places_totales = ?,
-                places_disponibles = ?
-                WHERE id = ?";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            $agenceDepart,
-            $agenceArrivee,
-            $dateDepart,
-            $dateArrivee,
-            $placesTotales,
-            $placesDispo,
-            $id
+        $this->trajetModel->update($id, [
+            'agence_depart_id' => $agenceDepart,
+            'agence_arrivee_id' => $agenceArrivee,
+            'date_heure_depart' => $dateDepart,
+            'date_heure_arrivee' => $dateArrivee,
+            'places_totales' => $placesTotales,
+            'places_disponibles' => $placesDispo
         ]);
 
-        $this->setFlash('success', 'Trajet modifié');
+        $this->setFlash('success', 'Trajet modifie');
         $this->redirect('/');
     }
 
@@ -213,20 +175,16 @@ class TrajetController extends Controller
             $this->redirect('/login');
         }
 
-        // Vérifie les droits
-        $stmt = $this->db->prepare("SELECT * FROM trajets WHERE id = ?");
-        $stmt->execute([$id]);
-        $trajet = $stmt->fetch();
+        $trajet = $this->trajetModel->find($id);
 
         if (!$trajet || ($trajet['conducteur_id'] != $this->getUser()['id'] && !$this->isAdmin())) {
-            $this->setFlash('error', 'Action non autorisée');
+            $this->setFlash('error', 'Action non autorisee');
             $this->redirect('/');
         }
 
-        $stmt = $this->db->prepare("DELETE FROM trajets WHERE id = ?");
-        $stmt->execute([$id]);
+        $this->trajetModel->delete($id);
 
-        $this->setFlash('success', 'Trajet supprimé');
+        $this->setFlash('success', 'Trajet supprime');
         $this->redirect('/');
     }
 }

@@ -1,18 +1,26 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\User;
+use App\Models\Trajet;
+use App\Models\Agence;
 use App\Database;
-use PDO;
 
 /**
  * Gestion de la partie admin
  */
 class AdminController extends Controller
 {
+    private $userModel;
+    private $trajetModel;
+    private $agenceModel;
     private $db;
 
     public function __construct()
     {
+        $this->userModel = new User();
+        $this->trajetModel = new Trajet();
+        $this->agenceModel = new Agence();
         $this->db = Database::getInstance()->getConnection();
     }
 
@@ -34,17 +42,11 @@ class AdminController extends Controller
     {
         $this->checkAdmin();
 
-        // Stats rapides
-        $stats = [];
-
-        $stmt = $this->db->query("SELECT COUNT(*) as total FROM utilisateurs");
-        $stats['users'] = $stmt->fetch()['total'];
-
-        $stmt = $this->db->query("SELECT COUNT(*) as total FROM agences");
-        $stats['agences'] = $stmt->fetch()['total'];
-
-        $stmt = $this->db->query("SELECT COUNT(*) as total FROM trajets");
-        $stats['trajets'] = $stmt->fetch()['total'];
+        $stats = [
+            'users' => $this->userModel->count(),
+            'agences' => $this->agenceModel->count(),
+            'trajets' => $this->trajetModel->count()
+        ];
 
         $this->view('admin/dashboard', [
             'stats' => $stats,
@@ -59,8 +61,7 @@ class AdminController extends Controller
     {
         $this->checkAdmin();
 
-        $stmt = $this->db->query("SELECT * FROM utilisateurs ORDER BY nom, prenom");
-        $users = $stmt->fetchAll();
+        $users = $this->userModel->all();
 
         $this->view('admin/users', [
             'users' => $users,
@@ -75,8 +76,7 @@ class AdminController extends Controller
     {
         $this->checkAdmin();
 
-        $stmt = $this->db->query("SELECT * FROM agences ORDER BY nom_ville");
-        $agences = $stmt->fetchAll();
+        $agences = $this->agenceModel->all();
 
         $this->view('admin/agences', [
             'agences' => $agences,
@@ -119,10 +119,9 @@ class AdminController extends Controller
             $this->redirect('/admin/agences/create');
         }
 
-        $stmt = $this->db->prepare("INSERT INTO agences (nom_ville) VALUES (?)");
-        $stmt->execute([$nomVille]);
+        $this->agenceModel->create(['nom_ville' => $nomVille]);
 
-        $this->setFlash('success', 'Agence ajoutee avec succes');
+        $this->setFlash('success', 'Agence ajoutee');
         $this->redirect('/admin/agences');
     }
 
@@ -133,9 +132,7 @@ class AdminController extends Controller
     {
         $this->checkAdmin();
 
-        $stmt = $this->db->prepare("SELECT * FROM agences WHERE id = ?");
-        $stmt->execute([$id]);
-        $agence = $stmt->fetch();
+        $agence = $this->agenceModel->find($id);
 
         if (!$agence) {
             $this->setFlash('error', 'Agence non trouvee');
@@ -170,8 +167,7 @@ class AdminController extends Controller
             $this->redirect('/admin/agences/' . $id . '/edit');
         }
 
-        $stmt = $this->db->prepare("UPDATE agences SET nom_ville = ? WHERE id = ?");
-        $stmt->execute([$nomVille, $id]);
+        $this->agenceModel->update($id, ['nom_ville' => $nomVille]);
 
         $this->setFlash('success', 'Agence modifiee');
         $this->redirect('/admin/agences');
@@ -194,8 +190,7 @@ class AdminController extends Controller
             $this->redirect('/admin/agences');
         }
 
-        $stmt = $this->db->prepare("DELETE FROM agences WHERE id = ?");
-        $stmt->execute([$id]);
+        $this->agenceModel->delete($id);
 
         $this->setFlash('success', 'Agence supprimee');
         $this->redirect('/admin/agences');
@@ -208,18 +203,7 @@ class AdminController extends Controller
     {
         $this->checkAdmin();
 
-        $sql = "SELECT t.*,
-                    dep.nom_ville as ville_depart,
-                    arr.nom_ville as ville_arrivee,
-                    u.nom, u.prenom
-                FROM trajets t
-                JOIN agences dep ON t.agence_depart_id = dep.id
-                JOIN agences arr ON t.agence_arrivee_id = arr.id
-                JOIN utilisateurs u ON t.conducteur_id = u.id
-                ORDER BY t.date_heure_depart DESC";
-
-        $stmt = $this->db->query($sql);
-        $trajets = $stmt->fetchAll();
+        $trajets = $this->trajetModel->all();
 
         $this->view('admin/trajets', [
             'trajets' => $trajets,
@@ -234,8 +218,7 @@ class AdminController extends Controller
     {
         $this->checkAdmin();
 
-        $stmt = $this->db->prepare("DELETE FROM trajets WHERE id = ?");
-        $stmt->execute([$id]);
+        $this->trajetModel->delete($id);
 
         $this->setFlash('success', 'Trajet supprime');
         $this->redirect('/admin/trajets');

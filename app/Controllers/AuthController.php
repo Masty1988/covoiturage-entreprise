@@ -1,19 +1,18 @@
 <?php
 namespace App\Controllers;
 
-use App\Database;
-use PDO;
+use App\Models\User;
 
 /**
  * Gestion de l'authentification
  */
 class AuthController extends Controller
 {
-    private $db;
+    private $userModel;
 
     public function __construct()
     {
-        $this->db = Database::getInstance()->getConnection();
+        $this->userModel = new User();
     }
 
     /**
@@ -41,17 +40,15 @@ class AuthController extends Controller
             $this->redirect('/login');
         }
 
-        // Recherche l'utilisateur
-        $stmt = $this->db->prepare("SELECT * FROM utilisateurs WHERE email = ?");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch();
+        // Recherche l'utilisateur via le model
+        $user = $this->userModel->findByEmail($email);
 
         if (!$user || !password_verify($password, $user['mot_de_passe'])) {
             $this->setFlash('error', 'Email ou mot de passe incorrect');
             $this->redirect('/login');
         }
 
-        // Connexion réussie - stocke en session
+        // Connexion reussie - stocke en session
         $_SESSION['user'] = [
             'id' => $user['id'],
             'nom' => $user['nom'],
@@ -72,7 +69,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Déconnexion
+     * Deconnexion
      */
     public function logout()
     {

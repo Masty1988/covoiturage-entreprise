@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Covoiturage Entreprise</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <title>KLAXON</title>
+    <link rel="stylesheet" href="/covoiturage-entreprise/assets/css/app.css">
 </head>
 <body>
     <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="<?= BASE_URL ?>/">Covoiturage</a>
+            <a class="navbar-brand" href="<?= BASE_URL ?>/">KLAXON</a>
 
             <div class="navbar-nav ms-auto">
                 <?php if (isset($_SESSION['user'])): ?>
@@ -53,7 +52,7 @@
     <!-- Footer -->
     <footer class="bg-dark text-light py-3 mt-5">
         <div class="container text-center">
-            <p class="mb-0">Covoiturage Entreprise &copy; <?= date('Y') ?></p>
+            <p class="mb-0">KLAXON &copy; <?= date('Y') ?></p>
         </div>
     </footer>
 
