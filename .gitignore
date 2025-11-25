@@ -18,6 +18,10 @@ Thumbs.db
 # Cache
 /cache/
 /tmp/
+.phpunit.result.cache
+
+# Fichiers de test temporaires
+/public/test_*.php
 
 # Environnement
 .env
