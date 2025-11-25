@@ -13,10 +13,37 @@ L'application offre aux employés la possibilité de consulter les trajets dispo
 - **Framework CSS** : Bootstrap 5.3
 - **Préprocesseur CSS** : Sass
 - **Architecture** : MVC (Modèle-Vue-Contrôleur)
-- **Routeur** : izniburak/router 2.0
+- **Routeur** : izniburak/router 2.0 (recommandé dans la consigne)
 - **Tests** : PHPUnit 9.5
 - **Analyse statique** : PHPStan 1.10
 - **Gestion des dépendances** : Composer, npm
+
+## Routing
+
+L'application utilise le routeur **izniburak/router** comme recommandé dans la consigne du projet. Les routes sont définies dans le fichier `routes/web.php`.
+
+### Syntaxe des routes
+
+- Routes simples : `$router->get('/login', 'AuthController@showLogin')`
+- Routes avec paramètres : `$router->get('/trajets/(:num)/edit', 'TrajetController@edit')`
+  - `(:num)` : paramètre numérique (ID)
+  - Les paramètres sont passés automatiquement aux méthodes des controllers
+
+### Configuration
+
+La configuration du routeur se trouve dans `public/index.php` :
+```php
+$router = new Router([
+    'base_folder' => '/covoiturage-entreprise/public',
+    'main_method' => 'index',
+    'paths' => ['controllers' => __DIR__ . '/../app/Controllers'],
+    'namespaces' => ['controllers' => 'App\Controllers']
+]);
+```
+
+### URL Rewriting
+
+Le fichier `public/.htaccess` gère la réécriture d'URL pour des URLs propres sans `index.php`.
 
 ## Prérequis
 

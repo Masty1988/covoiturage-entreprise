@@ -1,6 +1,8 @@
 <?php
 /**
  * Point d'entree de l'application
+ *
+ * Utilise le routeur izniburak/router comme recommande dans la consigne
  */
 
 // Afficher les erreurs en dev
@@ -14,122 +16,24 @@ require_once __DIR__ . '/../vendor/autoload.php';
 session_start();
 
 // Base path pour les URLs
-define('BASE_URL', '/covoiturage-entreprise/public/index.php');
+define('BASE_URL', '/covoiturage-entreprise/public');
 
-// Routeur simple
-use App\Controllers\TrajetController;
-use App\Controllers\AuthController;
-use App\Controllers\AdminController;
+// Initialisation du routeur izniburak/router
+use \buki\Router;
 
-// Recuperer l'URI
-$uri = $_SERVER['REQUEST_URI'];
-$uri = parse_url($uri, PHP_URL_PATH);
+$router = new Router([
+    'base_folder' => '/covoiturage-entreprise/public',
+    'main_method' => 'index',
+    'paths' => [
+        'controllers' => __DIR__ . '/../app/Controllers'
+    ],
+    'namespaces' => [
+        'controllers' => 'App\Controllers'
+    ]
+]);
 
-// Enlever le base path
-$basePath = '/covoiturage-entreprise/public';
-if (strpos($uri, $basePath) === 0) {
-    $uri = substr($uri, strlen($basePath));
-}
+// Chargement des routes
+require_once __DIR__ . '/../routes/web.php';
 
-// Enlever index.php (avec ou sans slash apres)
-$uri = preg_replace('#^/index\.php#', '', $uri);
-
-if (empty($uri)) {
-    $uri = '/';
-}
-
-// Routage
-$method = $_SERVER['REQUEST_METHOD'];
-
-// Routes GET
-if ($method === 'GET') {
-    switch ($uri) {
-        case '/':
-            $controller = new TrajetController();
-            $controller->index();
-            break;
-        case '/login':
-            $controller = new AuthController();
-            $controller->showLogin();
-            break;
-        case '/logout':
-            $controller = new AuthController();
-            $controller->logout();
-            break;
-        case '/trajets/create':
-            $controller = new TrajetController();
-            $controller->create();
-            break;
-        case '/admin':
-            $controller = new AdminController();
-            $controller->dashboard();
-            break;
-        case '/admin/users':
-            $controller = new AdminController();
-            $controller->users();
-            break;
-        case '/admin/agences':
-            $controller = new AdminController();
-            $controller->agences();
-            break;
-        case '/admin/agences/create':
-            $controller = new AdminController();
-            $controller->createAgence();
-            break;
-        case '/admin/trajets':
-            $controller = new AdminController();
-            $controller->trajets();
-            break;
-        default:
-            // Routes avec parametres
-            if (preg_match('#^/trajets/(\d+)/edit$#', $uri, $matches)) {
-                $controller = new TrajetController();
-                $controller->edit($matches[1]);
-            } elseif (preg_match('#^/admin/agences/(\d+)/edit$#', $uri, $matches)) {
-                $controller = new AdminController();
-                $controller->editAgence($matches[1]);
-            } else {
-                http_response_code(404);
-                echo "Page non trouvee";
-            }
-    }
-}
-
-// Routes POST
-if ($method === 'POST') {
-    switch ($uri) {
-        case '/login':
-            $controller = new AuthController();
-            $controller->login();
-            break;
-        case '/trajets/store':
-            $controller = new TrajetController();
-            $controller->store();
-            break;
-        case '/admin/agences/store':
-            $controller = new AdminController();
-            $controller->storeAgence();
-            break;
-        default:
-            // Routes POST avec parametres
-            if (preg_match('#^/trajets/(\d+)/update$#', $uri, $matches)) {
-                $controller = new TrajetController();
-                $controller->update($matches[1]);
-            } elseif (preg_match('#^/trajets/(\d+)/delete$#', $uri, $matches)) {
-                $controller = new TrajetController();
-                $controller->delete($matches[1]);
-            } elseif (preg_match('#^/admin/agences/(\d+)/update$#', $uri, $matches)) {
-                $controller = new AdminController();
-                $controller->updateAgence($matches[1]);
-            } elseif (preg_match('#^/admin/agences/(\d+)/delete$#', $uri, $matches)) {
-                $controller = new AdminController();
-                $controller->deleteAgence($matches[1]);
-            } elseif (preg_match('#^/admin/trajets/(\d+)/delete$#', $uri, $matches)) {
-                $controller = new AdminController();
-                $controller->deleteTrajet($matches[1]);
-            } else {
-                http_response_code(404);
-                echo "Page non trouvee";
-            }
-    }
-}
+// Lancement du routeur
+$router->run();
