@@ -5,18 +5,36 @@ use App\Database;
 
 /**
  * Model pour les trajets
+ *
+ * Gere les operations CRUD sur la table trajets de la base de donnees.
+ * Les trajets representent les deplacements proposes par les employes entre agences.
  */
 class Trajet
 {
+    /**
+     * Instance de connexion PDO a la base de donnees
+     * @var \PDO
+     */
     private $db;
 
+    /**
+     * Constructeur du modele Trajet
+     *
+     * Initialise la connexion a la base de donnees via le singleton Database
+     */
     public function __construct()
     {
         $this->db = Database::getInstance()->getConnection();
     }
 
     /**
-     * Recupere tous les trajets avec infos conducteur et villes
+     * Recupere tous les trajets avec les informations completes
+     *
+     * Cette methode effectue des jointures pour recuperer les informations
+     * du conducteur (utilisateur) et des agences de depart et d'arrivee.
+     * Les trajets sont tries par date de depart croissante.
+     *
+     * @return array Tableau de tous les trajets avec informations enrichies
      */
     public function all()
     {
@@ -35,7 +53,10 @@ class Trajet
     }
 
     /**
-     * Trouve un trajet par son ID
+     * Trouve un trajet par son identifiant
+     *
+     * @param int $id L'identifiant du trajet a rechercher
+     * @return array|false Les donnees du trajet ou false si non trouve
      */
     public function find($id)
     {
@@ -45,7 +66,9 @@ class Trajet
     }
 
     /**
-     * Compte le nombre de trajets
+     * Compte le nombre total de trajets dans la base
+     *
+     * @return int Le nombre de trajets
      */
     public function count()
     {
@@ -54,7 +77,15 @@ class Trajet
     }
 
     /**
-     * Cree un nouveau trajet
+     * Cree un nouveau trajet dans la base de donnees
+     *
+     * Le nombre de places disponibles est automatiquement initialise
+     * avec la meme valeur que le nombre de places totales.
+     *
+     * @param array $data Tableau associatif contenant les donnees du trajet
+     *                    Cles requises: conducteur_id, agence_depart_id, agence_arrivee_id,
+     *                                   date_heure_depart, date_heure_arrivee, places_totales
+     * @return bool True si la creation reussit, false sinon
      */
     public function create($data)
     {
@@ -75,7 +106,13 @@ class Trajet
     }
 
     /**
-     * Met a jour un trajet
+     * Met a jour les informations d'un trajet existant
+     *
+     * @param int $id L'identifiant du trajet a modifier
+     * @param array $data Tableau associatif contenant les nouvelles donnees
+     *                    Cles: agence_depart_id, agence_arrivee_id, date_heure_depart,
+     *                          date_heure_arrivee, places_totales, places_disponibles
+     * @return bool True si la mise a jour reussit, false sinon
      */
     public function update($id, $data)
     {
@@ -98,7 +135,10 @@ class Trajet
     }
 
     /**
-     * Supprime un trajet
+     * Supprime un trajet de la base de donnees
+     *
+     * @param int $id L'identifiant du trajet a supprimer
+     * @return bool True si la suppression reussit, false sinon
      */
     public function delete($id)
     {

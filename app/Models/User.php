@@ -5,18 +5,33 @@ use App\Database;
 
 /**
  * Model pour les utilisateurs
+ *
+ * Gere les operations CRUD sur la table utilisateurs de la base de donnees.
+ * Permet de recuperer, creer, modifier et supprimer des utilisateurs.
  */
 class User
 {
+    /**
+     * Instance de connexion PDO a la base de donnees
+     * @var \PDO
+     */
     private $db;
 
+    /**
+     * Constructeur du modele User
+     *
+     * Initialise la connexion a la base de donnees via le singleton Database
+     */
     public function __construct()
     {
         $this->db = Database::getInstance()->getConnection();
     }
 
     /**
-     * Trouve un utilisateur par son email
+     * Trouve un utilisateur par son adresse email
+     *
+     * @param string $email L'adresse email de l'utilisateur a rechercher
+     * @return array|false Les donnees de l'utilisateur ou false si non trouve
      */
     public function findByEmail($email)
     {
@@ -26,7 +41,10 @@ class User
     }
 
     /**
-     * Trouve un utilisateur par son ID
+     * Trouve un utilisateur par son identifiant
+     *
+     * @param int $id L'identifiant de l'utilisateur
+     * @return array|false Les donnees de l'utilisateur ou false si non trouve
      */
     public function find($id)
     {
@@ -36,7 +54,9 @@ class User
     }
 
     /**
-     * Recupere tous les utilisateurs
+     * Recupere tous les utilisateurs de la base de donnees
+     *
+     * @return array Tableau contenant tous les utilisateurs tries par ID
      */
     public function all()
     {
@@ -45,7 +65,9 @@ class User
     }
 
     /**
-     * Compte le nombre d'utilisateurs
+     * Compte le nombre total d'utilisateurs dans la base
+     *
+     * @return int Le nombre d'utilisateurs
      */
     public function count()
     {
@@ -54,7 +76,15 @@ class User
     }
 
     /**
-     * Cree un nouvel utilisateur
+     * Cree un nouvel utilisateur dans la base de donnees
+     *
+     * Le mot de passe fourni est automatiquement hashe avec bcrypt.
+     * Si le role n'est pas specifie, l'utilisateur est cree avec le role 'employe'.
+     *
+     * @param array $data Tableau associatif contenant les donnees de l'utilisateur
+     *                    Cles requises: nom, prenom, email, mot_de_passe, telephone
+     *                    Cle optionnelle: role (par defaut 'employe')
+     * @return bool True si la creation reussit, false sinon
      */
     public function create($data)
     {
@@ -73,7 +103,14 @@ class User
     }
 
     /**
-     * Met a jour un utilisateur
+     * Met a jour les informations d'un utilisateur existant
+     *
+     * Note: Le mot de passe n'est pas modifiable via cette methode
+     *
+     * @param int $id L'identifiant de l'utilisateur a modifier
+     * @param array $data Tableau associatif contenant les nouvelles donnees
+     *                    Cles: nom, prenom, email, telephone
+     * @return bool True si la mise a jour reussit, false sinon
      */
     public function update($id, $data)
     {
@@ -92,7 +129,13 @@ class User
     }
 
     /**
-     * Supprime un utilisateur
+     * Supprime un utilisateur de la base de donnees
+     *
+     * Attention: Cette action supprimera egalement tous les trajets associes
+     * a cet utilisateur en raison de la contrainte ON DELETE CASCADE
+     *
+     * @param int $id L'identifiant de l'utilisateur a supprimer
+     * @return bool True si la suppression reussit, false sinon
      */
     public function delete($id)
     {
