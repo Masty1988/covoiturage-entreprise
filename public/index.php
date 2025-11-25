@@ -19,7 +19,7 @@ session_start();
 define('BASE_URL', '/covoiturage-entreprise/public');
 
 // Initialisation du routeur izniburak/router
-use \buki\Router;
+use \Buki\Router\Router;
 
 $router = new Router([
     'base_folder' => '/covoiturage-entreprise/public',
