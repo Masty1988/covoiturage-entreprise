@@ -15,7 +15,12 @@ class Database
 
     private function __construct()
     {
-        $config = require __DIR__ . '/../config/database.php';
+        // Utilise config test si variable d'env TEST_MODE=true
+        $configFile = getenv('TEST_MODE') === 'true'
+            ? __DIR__ . '/../config/database.test.php'
+            : __DIR__ . '/../config/database.php';
+
+        $config = require $configFile;
 
         $dsn = sprintf(
             'mysql:host=%s;dbname=%s;charset=%s',

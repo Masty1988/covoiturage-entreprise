@@ -3,6 +3,9 @@
  * Bootstrap pour les tests PHPUnit
  */
 
+// Mode test pour utiliser database.test.php
+putenv('TEST_MODE=true');
+
 // Autoload Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
