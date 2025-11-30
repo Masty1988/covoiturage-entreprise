@@ -6,8 +6,8 @@
 
 return [
     'host' => 'localhost',
-    'dbname' => 'covoiturage_entreprise',
+    'dbname' => 'covoiturage_entreprise_test',
     'username' => 'root',
-    'password' => 'root',
+    'password' => '',  // A adapter selon votre environnement
     'charset' => 'utf8mb4'
 ];
