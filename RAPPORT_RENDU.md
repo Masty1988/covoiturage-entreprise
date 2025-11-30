@@ -1,8 +1,7 @@
 # Projet Covoiturage d'Entreprise
 
-**Étudiant :** [Ton nom]
+**Éleve :** Lesieur Nicolas
 **Date :** 30 novembre 2025
-**Formation :** [Ta formation]
 
 ---
 
@@ -23,13 +22,13 @@ Application web de covoiturage permettant aux employés d'une entreprise multi-s
 ### Technologies utilisées
 
 | Composant | Version |
-|-----------|---------|
-| PHP | 8.2.12 |
-| MySQL | 8.x |
-| Bootstrap | 5.3.8 |
-| Sass | 1.94.2 |
-| PHPUnit | 9.6.29 |
-| PHPStan | 1.10 |
+| --------- | ------- |
+| PHP       | 8.2.12  |
+| MySQL     | 8.x     |
+| Bootstrap | 5.3.8   |
+| Sass      | 1.94.2  |
+| PHPUnit   | 9.6.29  |
+| PHPStan   | 1.10    |
 
 ### Structure MVC
 
@@ -69,6 +68,7 @@ tests/              (12 tests unitaires)
 ### Routage
 
 Routeur manuel avec **19 routes** :
+
 - 10 routes GET (affichage)
 - 9 routes POST (actions)
 
@@ -86,10 +86,10 @@ Gestion des paramètres dynamiques avec regex pour les routes comme `/trajets/12
 Conformément à la consigne :
 
 ```scss
-$primary: #0074c7;    // Bleu principal
-$secondary: #00497c;  // Bleu foncé
-$success: #82b864;    // Vert
-$danger: #cd2c2e;     // Rouge
+$primary: #0074c7; // Bleu principal
+$secondary: #00497c; // Bleu foncé
+$success: #82b864; // Vert
+$danger: #cd2c2e; // Rouge
 ```
 
 ---
@@ -137,6 +137,7 @@ Tous les fichiers comportent des DocBlocks professionnels avec annotations `@par
 ### Organisation
 
 Commits réguliers et atomiques par fonctionnalité :
+
 - Structure MVC initiale
 - Implémentation des models
 - Création des controllers
@@ -147,18 +148,18 @@ Commits réguliers et atomiques par fonctionnalité :
 
 ## 8. Conformité à la consigne
 
-| Critère | Statut |
-|---------|--------|
-| Architecture MVC | ✅ |
-| Base de données MySQL | ✅ |
-| Bootstrap 5.3 | ✅ |
-| Sass avec palette imposée | ✅ |
-| izniburak/router installé | ✅ |
-| PHPUnit configuré | ✅ |
-| PHPStan installé | ✅ |
-| Documentation (README, MCD, MLD) | ✅ |
-| Sécurité (bcrypt, PDO) | ✅ |
-| Git avec historique | ✅ |
+| Critère                          | Statut |
+| -------------------------------- | ------ |
+| Architecture MVC                 | ✅     |
+| Base de données MySQL            | ✅     |
+| Bootstrap 5.3                    | ✅     |
+| Sass avec palette imposée        | ✅     |
+| izniburak/router installé        | ✅     |
+| PHPUnit configuré                | ✅     |
+| PHPStan installé                 | ✅     |
+| Documentation (README, MCD, MLD) | ✅     |
+| Sécurité (bcrypt, PDO)           | ✅     |
+| Git avec historique              | ✅     |
 
 **Conformité : 100%**
 
@@ -190,12 +191,15 @@ Commits réguliers et atomiques par fonctionnalité :
 ## 10. Captures d'écran
 
 ### Page d'accueil
+
 Liste des trajets disponibles avec filtrage automatique (places disponibles > 0, dates futures).
 
 ### Panel d'administration
+
 Tableau de bord avec statistiques et gestion complète des agences.
 
 ### Création de trajet
+
 Formulaire avec validation (dates cohérentes, agences différentes).
 
 ---
