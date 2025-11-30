@@ -2,18 +2,24 @@
 /vendor/
 /node_modules/
 
-# Configuration locale
-/config/database.php
-
-# Fichiers système
-.DS_Store
-Thumbs.db
-*.log
+# Environment
+.env
+.env.local
 
 # IDE
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+/logs/
 
 # Cache
 /cache/
@@ -23,5 +29,9 @@ Thumbs.db
 # Fichiers de test temporaires
 /public/test_*.php
 
-# Environnement
-.env
+# PHPUnit
+.phpunit.result.cache
+/coverage/
+
+# Config locale
+config/database.local.php
