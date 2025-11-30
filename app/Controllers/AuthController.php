@@ -8,11 +8,11 @@ use App\Models\User;
  */
 class AuthController extends Controller
 {
-    private $userModel;
+    private $modelUser;
 
     public function __construct()
     {
-        $this->userModel = new User();
+        $this->modelUser = new User();
     }
 
     /**
@@ -32,36 +32,36 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $email = $_POST['email'] ?? '';
-        $password = $_POST['password'] ?? '';
+        $emailUser = $_POST['email'] ?? '';
+        $mdp = $_POST['password'] ?? '';
 
-        if (empty($email) || empty($password)) {
+        if (empty($emailUser) || empty($mdp)) {
             $this->setFlash('error', 'Veuillez remplir tous les champs');
             $this->redirect('/login');
         }
 
-        // Recherche l'utilisateur via le model
-        $user = $this->userModel->findByEmail($email);
+        // Cherche l'utilisateur
+        $userData = $this->modelUser->findByEmail($emailUser);
 
-        if (!$user || !password_verify($password, $user['mot_de_passe'])) {
+        if (!$userData || !password_verify($mdp, $userData['mot_de_passe'])) {
             $this->setFlash('error', 'Email ou mot de passe incorrect');
             $this->redirect('/login');
         }
 
-        // Connexion reussie - stocke en session
+        // OK - stocke en session
         $_SESSION['user'] = [
-            'id' => $user['id'],
-            'nom' => $user['nom'],
-            'prenom' => $user['prenom'],
-            'email' => $user['email'],
-            'telephone' => $user['telephone'],
-            'role' => $user['role']
+            'id' => $userData['id'],
+            'nom' => $userData['nom'],
+            'prenom' => $userData['prenom'],
+            'email' => $userData['email'],
+            'telephone' => $userData['telephone'],
+            'role' => $userData['role']
         ];
 
-        $this->setFlash('success', 'Bienvenue ' . $user['prenom'] . ' !');
+        $this->setFlash('success', 'Bienvenue ' . $userData['prenom'] . ' !');
 
-        // Redirige vers admin si admin, sinon accueil
-        if ($user['role'] === 'admin') {
+        // Redirection selon role
+        if ($userData['role'] === 'admin') {
             $this->redirect('/admin');
         } else {
             $this->redirect('/');
