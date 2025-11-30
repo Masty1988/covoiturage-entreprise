@@ -3,21 +3,16 @@ namespace App\Controllers;
 
 /**
  * Controller de base
- *
- * Classe abstraite dont heritent tous les autres controllers de l'application.
- * Fournit des methodes utilitaires pour la gestion des vues, redirections,
- * messages flash et verification des permissions utilisateur.
+ * Fournit des methodes utiles pour tous les controllers
  */
 class Controller
 {
     /**
-     * Affiche une vue avec des donnees
+     * Affiche une vue
+     * Les donnees sont extraites pour etre accessibles directement dans la vue
      *
-     * Cette methode charge un fichier de vue et lui transmet des donnees.
-     * Les donnees sont extraites dans le scope de la vue pour un acces direct.
-     *
-     * @param string $name Nom de la vue a afficher (chemin relatif depuis views/)
-     * @param array $data Tableau associatif de donnees a passer a la vue
+     * @param string $name Nom de la vue (chemin relatif depuis views/)
+     * @param array $data Donnees a passer a la vue
      * @return void
      */
     protected function view($name, $data = [])
@@ -36,9 +31,9 @@ class Controller
     }
 
     /**
-     * Redirige vers une URL interne de l'application
+     * Redirection interne
      *
-     * @param string $url URL relative a rediriger (ex: '/login', '/admin')
+     * @param string $url URL relative (ex: '/login', '/admin')
      * @return void
      */
     protected function redirect($url)
@@ -48,13 +43,11 @@ class Controller
     }
 
     /**
-     * Stocke un message flash en session
+     * Stocke un message flash
+     * Affiche une fois apres redirection puis supprime auto
      *
-     * Les messages flash sont affiches une seule fois apres une redirection,
-     * puis automatiquement supprimes.
-     *
-     * @param string $type Type de message ('success' ou 'error')
-     * @param string $message Contenu du message a afficher
+     * @param string $type 'success' ou 'error'
+     * @param string $message Contenu du message
      * @return void
      */
     protected function setFlash($type, $message)
@@ -66,9 +59,9 @@ class Controller
     }
 
     /**
-     * Verifie si un utilisateur est connecte
+     * Verifie si un user est connecte
      *
-     * @return bool True si un utilisateur est connecte, false sinon
+     * @return bool
      */
     protected function isLogged()
     {
@@ -76,9 +69,9 @@ class Controller
     }
 
     /**
-     * Verifie si l'utilisateur connecte a le role administrateur
+     * Verifie si le user est admin
      *
-     * @return bool True si l'utilisateur est admin, false sinon
+     * @return bool
      */
     protected function isAdmin()
     {
@@ -86,9 +79,9 @@ class Controller
     }
 
     /**
-     * Recupere les informations de l'utilisateur actuellement connecte
+     * Recupere l'utilisateur connecte
      *
-     * @return array|null Tableau des donnees utilisateur ou null si non connecte
+     * @return array|null Donnees user ou null
      */
     protected function getUser()
     {

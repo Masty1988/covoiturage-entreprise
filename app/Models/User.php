@@ -4,23 +4,19 @@ namespace App\Models;
 use App\Database;
 
 /**
- * Model pour les utilisateurs
- *
- * Gere les operations CRUD sur la table utilisateurs de la base de donnees.
- * Permet de recuperer, creer, modifier et supprimer des utilisateurs.
+ * Modele pour gerer les utilisateurs
+ * Operations CRUD sur la table utilisateurs
  */
 class User
 {
     /**
-     * Instance de connexion PDO a la base de donnees
+     * Connexion PDO
      * @var \PDO
      */
     private $db;
 
     /**
-     * Constructeur du modele User
-     *
-     * Initialise la connexion a la base de donnees via le singleton Database
+     * Initialise la connexion DB
      */
     public function __construct()
     {
@@ -28,10 +24,10 @@ class User
     }
 
     /**
-     * Trouve un utilisateur par son adresse email
+     * Recherche par email
      *
-     * @param string $email L'adresse email de l'utilisateur a rechercher
-     * @return array|false Les donnees de l'utilisateur ou false si non trouve
+     * @param string $email Email de l'utilisateur
+     * @return array|false Donnees utilisateur ou false
      */
     public function findByEmail($email)
     {
@@ -41,10 +37,10 @@ class User
     }
 
     /**
-     * Trouve un utilisateur par son identifiant
+     * Recherche par ID
      *
-     * @param int $id L'identifiant de l'utilisateur
-     * @return array|false Les donnees de l'utilisateur ou false si non trouve
+     * @param int $id ID utilisateur
+     * @return array|false Donnees ou false
      */
     public function find($id)
     {
@@ -54,9 +50,9 @@ class User
     }
 
     /**
-     * Recupere tous les utilisateurs de la base de donnees
+     * Liste tous les utilisateurs
      *
-     * @return array Tableau contenant tous les utilisateurs tries par ID
+     * @return array Utilisateurs tries par ID
      */
     public function all()
     {
@@ -65,9 +61,9 @@ class User
     }
 
     /**
-     * Compte le nombre total d'utilisateurs dans la base
+     * Compte les utilisateurs
      *
-     * @return int Le nombre d'utilisateurs
+     * @return int Nombre total
      */
     public function count()
     {
@@ -76,15 +72,12 @@ class User
     }
 
     /**
-     * Cree un nouvel utilisateur dans la base de donnees
+     * Cree un utilisateur
+     * Le mdp est hashe automatiquement avec bcrypt
+     * Role par defaut: employe
      *
-     * Le mot de passe fourni est automatiquement hashe avec bcrypt.
-     * Si le role n'est pas specifie, l'utilisateur est cree avec le role 'employe'.
-     *
-     * @param array $data Tableau associatif contenant les donnees de l'utilisateur
-     *                    Cles requises: nom, prenom, email, mot_de_passe, telephone
-     *                    Cle optionnelle: role (par defaut 'employe')
-     * @return bool True si la creation reussit, false sinon
+     * @param array $data nom, prenom, email, mot_de_passe, telephone, role (optionnel)
+     * @return bool Success
      */
     public function create($data)
     {
@@ -103,14 +96,12 @@ class User
     }
 
     /**
-     * Met a jour les informations d'un utilisateur existant
+     * Modifie un utilisateur
+     * Note: le mdp n'est pas modifiable ici
      *
-     * Note: Le mot de passe n'est pas modifiable via cette methode
-     *
-     * @param int $id L'identifiant de l'utilisateur a modifier
-     * @param array $data Tableau associatif contenant les nouvelles donnees
-     *                    Cles: nom, prenom, email, telephone
-     * @return bool True si la mise a jour reussit, false sinon
+     * @param int $id ID utilisateur
+     * @param array $data nom, prenom, email, telephone
+     * @return bool Success
      */
     public function update($id, $data)
     {
@@ -129,13 +120,11 @@ class User
     }
 
     /**
-     * Supprime un utilisateur de la base de donnees
+     * Supprime un utilisateur
+     * ATTENTION: supprime aussi ses trajets (CASCADE)
      *
-     * Attention: Cette action supprimera egalement tous les trajets associes
-     * a cet utilisateur en raison de la contrainte ON DELETE CASCADE
-     *
-     * @param int $id L'identifiant de l'utilisateur a supprimer
-     * @return bool True si la suppression reussit, false sinon
+     * @param int $id ID utilisateur
+     * @return bool Success
      */
     public function delete($id)
     {

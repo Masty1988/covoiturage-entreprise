@@ -4,23 +4,19 @@ namespace App\Models;
 use App\Database;
 
 /**
- * Model pour les agences
- *
- * Gere les operations CRUD sur la table agences de la base de donnees.
- * Les agences representent les differents sites geographiques de l'entreprise.
+ * Modele pour les agences
+ * Represente les differents sites de l'entreprise
  */
 class Agence
 {
     /**
-     * Instance de connexion PDO a la base de donnees
+     * Connexion PDO
      * @var \PDO
      */
     private $db;
 
     /**
-     * Constructeur du modele Agence
-     *
-     * Initialise la connexion a la base de donnees via le singleton Database
+     * Init connexion
      */
     public function __construct()
     {
@@ -28,9 +24,9 @@ class Agence
     }
 
     /**
-     * Recupere toutes les agences de la base de donnees
+     * Liste toutes les agences
      *
-     * @return array Tableau contenant toutes les agences triees par ID
+     * @return array Agences triees par ID
      */
     public function all()
     {
@@ -39,10 +35,10 @@ class Agence
     }
 
     /**
-     * Trouve une agence par son identifiant
+     * Recherche par ID
      *
-     * @param int $id L'identifiant de l'agence a rechercher
-     * @return array|false Les donnees de l'agence ou false si non trouvee
+     * @param int $id ID agence
+     * @return array|false Donnees ou false
      */
     public function find($id)
     {
@@ -52,9 +48,9 @@ class Agence
     }
 
     /**
-     * Compte le nombre total d'agences dans la base
+     * Compte les agences
      *
-     * @return int Le nombre d'agences
+     * @return int Total
      */
     public function count()
     {
@@ -63,11 +59,10 @@ class Agence
     }
 
     /**
-     * Cree une nouvelle agence dans la base de donnees
+     * Cree une agence
      *
-     * @param array $data Tableau associatif contenant les donnees de l'agence
-     *                    Cle requise: nom_ville
-     * @return bool True si la creation reussit, false sinon
+     * @param array $data nom_ville
+     * @return bool Success
      */
     public function create($data)
     {
@@ -76,12 +71,11 @@ class Agence
     }
 
     /**
-     * Met a jour les informations d'une agence existante
+     * Modifie une agence
      *
-     * @param int $id L'identifiant de l'agence a modifier
-     * @param array $data Tableau associatif contenant les nouvelles donnees
-     *                    Cle requise: nom_ville
-     * @return bool True si la mise a jour reussit, false sinon
+     * @param int $id ID agence
+     * @param array $data nom_ville
+     * @return bool Success
      */
     public function update($id, $data)
     {
@@ -90,13 +84,11 @@ class Agence
     }
 
     /**
-     * Supprime une agence de la base de donnees
+     * Supprime une agence
+     * ATTENTION: supprime aussi les trajets associes (CASCADE)
      *
-     * Attention: Cette action supprimera egalement tous les trajets ayant
-     * cette agence comme depart ou arrivee en raison de la contrainte ON DELETE CASCADE
-     *
-     * @param int $id L'identifiant de l'agence a supprimer
-     * @return bool True si la suppression reussit, false sinon
+     * @param int $id ID agence
+     * @return bool Success
      */
     public function delete($id)
     {

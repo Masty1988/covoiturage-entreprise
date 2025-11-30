@@ -25,6 +25,3 @@ Thumbs.db
 
 # Environnement
 .env
-
-# Claude
-.claude/
