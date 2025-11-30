@@ -1,0 +1,31 @@
+{
+  "name": "covoiturage-entreprise",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass": "sass assets/scss/app.scss assets/css/app.css",
+    "sass:watch": "sass --watch assets/scss/app.scss assets/css/app.css",
+    "build": "sass assets/scss/app.scss assets/css/app.css --style=compressed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Masty1988/covoiturage-entreprise.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Masty1988/covoiturage-entreprise/issues"
+  },
+  "homepage": "https://github.com/Masty1988/covoiturage-entreprise#readme",
+  "devDependencies": {
+    "bootstrap": "^5.3.8",
+    "sass": "^1.94.2"
+  }
+}

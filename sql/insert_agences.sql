@@ -1,9 +1,9 @@
 -- ============================================
--- Script d'insertion des agences
--- Application: Touche pas au Klaxon
+-- Insertion des agences (villes)
 -- ============================================
+USE covoiturage_entreprise;
 
-INSERT INTO agences (nom) VALUES
+INSERT INTO agences (nom_ville) VALUES
 ('Paris'),
 ('Lyon'),
 ('Marseille'),
@@ -16,6 +16,3 @@ INSERT INTO agences (nom) VALUES
 ('Lille'),
 ('Rennes'),
 ('Reims');
-
--- Vérification
-SELECT * FROM agences ORDER BY nom;

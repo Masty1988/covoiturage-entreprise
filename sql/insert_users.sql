@@ -1,37 +1,33 @@
 -- ============================================
--- Script d'insertion des utilisateurs
--- Application: Touche pas au Klaxon
+-- Insertion des utilisateurs
+-- Mot de passe par défaut : "password123"
+-- Hash : $2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6
 -- ============================================
--- Note: Tous les mots de passe sont "password123" hashés en bcrypt
--- Pour l'admin, le mot de passe est "admin123"
--- ============================================
+USE covoiturage_entreprise;
 
--- Insertion d'un administrateur
-INSERT INTO users (nom, prenom, telephone, email, password, is_admin) VALUES
-('Admin', 'Super', '0600000000', 'admin@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1);
+-- Admin (pour les tests)
+INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, telephone, role) VALUES
+('Admin', 'Super', 'admin@entreprise.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0600000000', 'admin');
 
--- Insertion des employés
-INSERT INTO users (nom, prenom, telephone, email, password, is_admin) VALUES
-('Martin', 'Alexandre', '0612345678', 'alexandre.martin@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Dubois', 'Sophie', '0698765432', 'sophie.dubois@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Bernard', 'Julien', '0622446688', 'julien.bernard@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Moreau', 'Camille', '0611223344', 'camille.moreau@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Lefèvre', 'Lucie', '0777889900', 'lucie.lefevre@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Leroy', 'Thomas', '0655443322', 'thomas.leroy@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Roux', 'Chloé', '0633221199', 'chloe.roux@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Petit', 'Maxime', '0766778899', 'maxime.petit@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Garnier', 'Laura', '0688776655', 'laura.garnier@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Dupuis', 'Antoine', '0744556677', 'antoine.dupuis@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Lefebvre', 'Emma', '0699887766', 'emma.lefebvre@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Fontaine', 'Louis', '0655667788', 'louis.fontaine@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Chevalier', 'Clara', '0788990011', 'clara.chevalier@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Robin', 'Nicolas', '0644332211', 'nicolas.robin@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Gauthier', 'Marine', '0677889922', 'marine.gauthier@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Fournier', 'Pierre', '0722334455', 'pierre.fournier@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Girard', 'Sarah', '0688665544', 'sarah.girard@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Lambert', 'Hugo', '0611223366', 'hugo.lambert@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Masson', 'Julie', '0733445566', 'julie.masson@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0),
-('Henry', 'Arthur', '0666554433', 'arthur.henry@email.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 0);
-
--- Vérification
-SELECT id, nom, prenom, email, is_admin FROM users ORDER BY nom, prenom;
+-- Employés (données fournies)
+INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, telephone, role) VALUES
+('Martin', 'Alexandre', 'alexandre.martin@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0612345678', 'employe'),
+('Dubois', 'Sophie', 'sophie.dubois@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0698765432', 'employe'),
+('Bernard', 'Julien', 'julien.bernard@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0622446688', 'employe'),
+('Moreau', 'Camille', 'camille.moreau@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0611223344', 'employe'),
+('Lefèvre', 'Lucie', 'lucie.lefevre@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0777889900', 'employe'),
+('Leroy', 'Thomas', 'thomas.leroy@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0655443322', 'employe'),
+('Roux', 'Chloé', 'chloe.roux@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0633221199', 'employe'),
+('Petit', 'Maxime', 'maxime.petit@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0766778899', 'employe'),
+('Garnier', 'Laura', 'laura.garnier@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0688776655', 'employe'),
+('Dupuis', 'Antoine', 'antoine.dupuis@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0744556677', 'employe'),
+('Lefebvre', 'Emma', 'emma.lefebvre@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0699887766', 'employe'),
+('Fontaine', 'Louis', 'louis.fontaine@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0655667788', 'employe'),
+('Chevalier', 'Clara', 'clara.chevalier@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0788990011', 'employe'),
+('Robin', 'Nicolas', 'nicolas.robin@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0644332211', 'employe'),
+('Gauthier', 'Marine', 'marine.gauthier@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0677889922', 'employe'),
+('Fournier', 'Pierre', 'pierre.fournier@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0722334455', 'employe'),
+('Girard', 'Sarah', 'sarah.girard@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0688665544', 'employe'),
+('Lambert', 'Hugo', 'hugo.lambert@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0611223366', 'employe'),
+('Masson', 'Julie', 'julie.masson@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0733445566', 'employe'),
+('Henry', 'Arthur', 'arthur.henry@email.fr', '$2y$10$ewbSJ3axBab5kovCKAQUH.pbeJcPxaeXTVOkrgAnHxWdNe0J2Utb6', '0666554433', 'employe');

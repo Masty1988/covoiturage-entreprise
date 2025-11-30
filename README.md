@@ -1,124 +1,272 @@
-# Touche pas au Klaxon 🚗
+# KLAXON - Application de Covoiturage Entreprise
 
-Application de covoiturage d'entreprise développée en PHP avec architecture MVC.
+## Description
 
-## 📋 Description
+KLAXON est une application web de covoiturage interne destinée aux employés d'une entreprise multi-sites. Elle permet de diffuser les trajets planifiés entre les différentes agences afin de favoriser le covoiturage et optimiser le taux d'occupation des véhicules.
 
-Application permettant aux employés de proposer et consulter des trajets de covoiturage entre les différentes agences de l'entreprise.
+L'application offre aux employés la possibilité de consulter les trajets disponibles, de proposer leurs propres trajets et de contacter les conducteurs. Un espace administrateur permet de gérer les agences, les utilisateurs et l'ensemble des trajets.
 
-## 🚀 Installation
+## Technologies utilisées
 
-### Prérequis
+- **Backend** : PHP 7.4+
+- **Base de données** : MySQL / MariaDB
+- **Framework CSS** : Bootstrap 5.3
+- **Préprocesseur CSS** : Sass
+- **Architecture** : MVC (Modèle-Vue-Contrôleur)
+- **Routeur** : izniburak/router 2.0 (recommandé dans la consigne)
+- **Tests** : PHPUnit 9.5
+- **Analyse statique** : PHPStan 1.10
+- **Gestion des dépendances** : Composer, npm
 
-- PHP >= 8.0
-- MySQL/MariaDB
+## Routing
+
+L'application utilise le routeur **izniburak/router** comme recommandé dans la consigne du projet. Les routes sont définies dans le fichier `routes/web.php`.
+
+### Syntaxe des routes
+
+- Routes simples : `$router->get('/login', 'AuthController@showLogin')`
+- Routes avec paramètres : `$router->get('/trajets/(:num)/edit', 'TrajetController@edit')`
+  - `(:num)` : paramètre numérique (ID)
+  - Les paramètres sont passés automatiquement aux méthodes des controllers
+
+### Configuration
+
+La configuration du routeur se trouve dans `public/index.php` :
+```php
+$router = new Router([
+    'base_folder' => '/covoiturage-entreprise/public',
+    'main_method' => 'index',
+    'paths' => ['controllers' => __DIR__ . '/../app/Controllers'],
+    'namespaces' => ['controllers' => 'App\Controllers']
+]);
+```
+
+### URL Rewriting
+
+Le fichier `public/.htaccess` gère la réécriture d'URL pour des URLs propres sans `index.php`.
+
+## Prérequis
+
+Avant d'installer l'application, assurez-vous d'avoir les éléments suivants installés sur votre machine :
+
+- PHP 7.4 ou supérieur
+- MySQL 5.7+ ou MariaDB 10.2+
 - Composer
-- Serveur web (Apache/Nginx)
+- Node.js et npm
+- Serveur web (Apache, Nginx) ou PHP built-in server
 
-### Étapes d'installation
+## Installation
 
-1. **Cloner le projet**
+### 1. Cloner le dépôt
+
 ```bash
-git clone https://github.com/Masty1988/covoiturage-entreprise.git
+git clone <url-du-depot>
 cd covoiturage-entreprise
 ```
 
-2. **Installer les dépendances**
+### 2. Installer les dépendances PHP
+
 ```bash
 composer install
 ```
 
-3. **Configurer la base de données**
+### 3. Installer les dépendances npm
 
-Éditer `config/database.php` avec vos paramètres :
+```bash
+npm install
+```
+
+### 4. Configurer la base de données
+
+Créez un fichier de configuration pour la base de données :
+
+```bash
+cp config/database.example.php config/database.php
+```
+
+Modifiez le fichier `config/database.php` avec vos paramètres MySQL :
+
 ```php
-'host' => 'localhost',
-'database' => 'covoiturage',
-'username' => 'votre_user',
-'password' => 'votre_password',
+return [
+    'host' => 'localhost',
+    'dbname' => 'covoiturage_entreprise',
+    'username' => 'votre_utilisateur',
+    'password' => 'votre_mot_de_passe',
+    'charset' => 'utf8mb4'
+];
 ```
 
-4. **Créer la base de données**
+### 5. Créer la base de données
+
+Exécutez les scripts SQL dans l'ordre suivant :
+
 ```bash
-mysql -u root -p
-```
-```sql
-CREATE DATABASE covoiturage CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE covoiturage;
-source sql/create_tables.sql;
-source sql/insert_agences.sql;
-source sql/insert_users.sql;
-source sql/insert_trajets_demo.sql;
+mysql -u votre_utilisateur -p < sql/create_tables.sql
+mysql -u votre_utilisateur -p covoiturage_entreprise < sql/insert_agences.sql
+mysql -u votre_utilisateur -p covoiturage_entreprise < sql/insert_users.sql
 ```
 
-5. **Configurer le serveur web**
+Alternativement, vous pouvez importer les fichiers via phpMyAdmin ou un autre client MySQL.
 
-**Apache** : Pointer le DocumentRoot vers le dossier `public/`
+### 6. Compiler les assets Sass
 
-**PHP Built-in Server** (développement) :
 ```bash
-php -S localhost:8000 -t public/
+npm run build
 ```
 
-## 👥 Identifiants de connexion
+Pour le développement avec compilation automatique :
 
-**Administrateur :**
-- Email: `admin@email.fr`
-- Mot de passe: `admin123`
-
-**Utilisateur test :**
-- Email: `alexandre.martin@email.fr`
-- Mot de passe: `password123`
-
-## 🏗️ Architecture
-```
-├── config/           # Configuration (BDD, routes)
-├── public/           # Point d'entrée (index.php)
-├── src/
-│   ├── Controllers/  # Contrôleurs
-│   ├── Models/       # Modèles et repositories
-│   ├── Views/        # Vues (templates)
-│   ├── Core/         # Classes du framework
-│   ├── Middlewares/  # Middlewares (Auth, Admin)
-│   └── Utils/        # Utilitaires (Session, Flash, etc.)
-├── sql/              # Scripts SQL
-└── tests/            # Tests unitaires
-```
-
-## 🧪 Tests
 ```bash
-composer test          # Lance tous les tests
-composer test:unit     # Tests unitaires uniquement
+npm run sass:watch
 ```
 
-## 📊 Qualité du code
+### 7. Lancer le serveur de développement
+
+Si vous utilisez XAMPP, placez le projet dans le dossier `htdocs` et accédez à :
+
+```
+http://localhost/covoiturage-entreprise/public/
+```
+
+Ou utilisez le serveur PHP intégré :
+
 ```bash
-composer analyse       # Analyse avec PHPStan
+php -S localhost:8000 -t public
 ```
 
-## 📝 Fonctionnalités
+Puis accédez à `http://localhost:8000`
 
-### Visiteur (non connecté)
-- ✅ Consulter les trajets disponibles
+## Structure du projet
 
-### Utilisateur connecté
-- ✅ Voir les détails d'un trajet
-- ✅ Créer un trajet
-- ✅ Modifier ses propres trajets
-- ✅ Supprimer ses propres trajets
+```
+covoiturage-entreprise/
+├── app/
+│   ├── Controllers/         # Contrôleurs MVC
+│   │   ├── AdminController.php
+│   │   ├── AuthController.php
+│   │   ├── Controller.php
+│   │   └── TrajetController.php
+│   ├── Models/              # Modèles de données
+│   │   ├── Agence.php
+│   │   ├── Trajet.php
+│   │   └── User.php
+│   └── Database.php         # Classe de connexion PDO
+├── assets/
+│   ├── css/                 # CSS compilés
+│   └── scss/                # Fichiers source Sass
+│       └── app.scss
+├── config/
+│   └── database.php         # Configuration BDD
+├── public/
+│   └── index.php            # Point d'entrée de l'application
+├── routes/
+│   └── web.php              # Définition des routes
+├── sql/
+│   ├── create_tables.sql    # Script de création des tables
+│   ├── insert_agences.sql   # Données des agences
+│   └── insert_users.sql     # Données des utilisateurs
+├── tests/
+│   ├── Models/              # Tests unitaires des modèles
+│   └── bootstrap.php        # Fichier de bootstrap des tests
+├── views/
+│   ├── admin/               # Vues de l'administration
+│   ├── auth/                # Vues d'authentification
+│   ├── trajets/             # Vues des trajets
+│   └── layout.php           # Template principal
+├── composer.json            # Dépendances PHP
+├── package.json             # Dépendances npm
+└── phpunit.xml              # Configuration PHPUnit
+```
 
-### Administrateur
-- ✅ Gérer les utilisateurs
-- ✅ Gérer les agences
-- ✅ Gérer tous les trajets
-- ✅ Tableau de bord complet
+## Fonctionnalités
 
-## 📜 Licence
+### Pour tous les visiteurs
 
-MIT
+- Consultation de la liste des trajets disponibles avec places restantes
+- Trajets triés par date de départ croissante
+- Affichage des informations basiques : ville de départ, date, ville d'arrivée, places disponibles
 
-## 👨‍💻 Auteur
+### Pour les employés connectés
 
-**Nicolas - Masty1988**
+- Accès aux informations complètes des trajets (conducteur, téléphone, email)
+- Proposition de nouveaux trajets
+- Modification de leurs propres trajets
+- Suppression de leurs propres trajets
 
-- GitHub: [@Masty1988](https://github.com/Masty1988)
+### Pour les administrateurs
+
+- Tableau de bord avec statistiques
+- Gestion complète des utilisateurs (consultation)
+- Gestion des agences (création, modification, suppression)
+- Gestion de tous les trajets (consultation, suppression)
+
+## Identifiants de test
+
+### Compte administrateur
+
+- **Email** : admin@entreprise.fr
+- **Mot de passe** : password123
+
+### Compte utilisateur (exemple)
+
+- **Email** : jean.dupont@entreprise.fr
+- **Mot de passe** : password123
+
+Note : Tous les utilisateurs de test utilisent le même mot de passe pour faciliter les tests.
+
+## Tests
+
+### Exécuter les tests unitaires
+
+```bash
+vendor/bin/phpunit
+```
+
+Les tests couvrent les opérations CRUD des modèles (User, Trajet, Agence).
+
+### Analyse statique avec PHPStan
+
+```bash
+vendor/bin/phpstan analyse app --level=5
+```
+
+## Palette de couleurs
+
+L'application utilise une palette de couleurs imposée, définie dans les variables Sass :
+
+- Bleu principal : #0074c7
+- Bleu foncé : #00497c
+- Vert : #82b864
+- Rouge : #cd2c2e
+- Bleu très clair : #f1f8fc
+- Gris foncé : #384050
+
+Ces couleurs sont intégrées dans Bootstrap via les variables Sass pour faciliter la réutilisation dans d'autres projets.
+
+## Sécurité
+
+- Les mots de passe sont hashés avec bcrypt via `password_hash()`
+- Protection des routes administrateur
+- Vérification de propriété pour la modification et suppression de trajets
+- Échappement des données avec `htmlspecialchars()` pour prévenir les attaques XSS
+- Requêtes préparées (PDO) pour prévenir les injections SQL
+
+## Contribution
+
+Ce projet a été développé dans le cadre d'un projet académique. Le code est documenté et structuré pour faciliter sa reprise par d'autres développeurs.
+
+## Base de données
+
+La base de données contient :
+
+- 12 agences (Paris, Lyon, Marseille, Toulouse, Nice, Nantes, Strasbourg, Montpellier, Bordeaux, Lille, Rennes, Reims)
+- 21 utilisateurs (1 administrateur et 20 employés)
+- Structure optimisée avec index et contraintes d'intégrité
+
+## Licence
+
+Ce projet est développé dans un cadre pédagogique.
+
+## Support
+
+Pour toute question ou problème, veuillez consulter la documentation ou contacter l'équipe de développement.

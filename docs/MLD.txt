@@ -1,0 +1,128 @@
+MODELE LOGIQUE DE DONNEES (MLD)
+Application KLAXON - Covoiturage Entreprise
+============================================
+
+
+SCHEMA RELATIONNEL
+------------------
+
+UTILISATEURS (#id, nom, prenom, email, mot_de_passe, telephone, role, created_at)
+    Clé primaire : id
+    Contraintes :
+        - email UNIQUE
+        - role ENUM('employe', 'admin')
+
+AGENCES (#id, nom_ville, created_at)
+    Clé primaire : id
+    Contraintes :
+        - nom_ville UNIQUE
+
+TRAJETS (#id, date_heure_depart, date_heure_arrivee, places_totales, places_disponibles,
+         =>conducteur_id, =>agence_depart_id, =>agence_arrivee_id, created_at, updated_at)
+    Clé primaire : id
+    Clés étrangères :
+        - conducteur_id REFERENCES UTILISATEURS(id) ON DELETE CASCADE
+        - agence_depart_id REFERENCES AGENCES(id) ON DELETE CASCADE
+        - agence_arrivee_id REFERENCES AGENCES(id) ON DELETE CASCADE
+    Contraintes :
+        - places_disponibles <= places_totales
+        - places_disponibles >= 0
+        - date_heure_arrivee > date_heure_depart
+        - agence_depart_id != agence_arrivee_id
+    Index :
+        - INDEX idx_trajets_depart (date_heure_depart)
+        - INDEX idx_trajets_places (places_disponibles)
+        - INDEX idx_trajets_conducteur (conducteur_id)
+
+
+DESCRIPTION DES TABLES
+----------------------
+
+Table UTILISATEURS
+------------------
+id                  INT             AUTO_INCREMENT PRIMARY KEY
+nom                 VARCHAR(100)    NOT NULL
+prenom              VARCHAR(100)    NOT NULL
+email               VARCHAR(255)    NOT NULL UNIQUE
+mot_de_passe        VARCHAR(255)    NOT NULL (hash bcrypt)
+telephone           VARCHAR(20)     NOT NULL
+role                ENUM            NOT NULL DEFAULT 'employe' ('employe', 'admin')
+created_at          TIMESTAMP       DEFAULT CURRENT_TIMESTAMP
+
+Description : Stocke les informations des employés et administrateurs de l'entreprise.
+Le mot de passe est hashé avec bcrypt pour des raisons de sécurité.
+
+
+Table AGENCES
+-------------
+id                  INT             AUTO_INCREMENT PRIMARY KEY
+nom_ville           VARCHAR(100)    NOT NULL UNIQUE
+created_at          TIMESTAMP       DEFAULT CURRENT_TIMESTAMP
+
+Description : Représente les différents sites géographiques de l'entreprise.
+Chaque agence est identifiée par sa ville.
+
+
+Table TRAJETS
+-------------
+id                      INT         AUTO_INCREMENT PRIMARY KEY
+agence_depart_id        INT         NOT NULL (FK -> AGENCES.id)
+agence_arrivee_id       INT         NOT NULL (FK -> AGENCES.id)
+date_heure_depart       DATETIME    NOT NULL
+date_heure_arrivee      DATETIME    NOT NULL
+places_totales          INT         NOT NULL
+places_disponibles      INT         NOT NULL
+conducteur_id           INT         NOT NULL (FK -> UTILISATEURS.id)
+created_at              TIMESTAMP   DEFAULT CURRENT_TIMESTAMP
+updated_at              TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+Description : Contient les trajets proposés par les employés entre différentes agences.
+Les places_disponibles sont initialisées avec la même valeur que places_totales lors de la création.
+
+
+DEPENDANCES FONCTIONNELLES
+---------------------------
+
+UTILISATEURS :
+    id -> nom, prenom, email, mot_de_passe, telephone, role, created_at
+    email -> id, nom, prenom, mot_de_passe, telephone, role, created_at
+
+AGENCES :
+    id -> nom_ville, created_at
+    nom_ville -> id, created_at
+
+TRAJETS :
+    id -> agence_depart_id, agence_arrivee_id, date_heure_depart, date_heure_arrivee,
+          places_totales, places_disponibles, conducteur_id, created_at, updated_at
+
+
+NORMALISATION
+-------------
+
+Le modèle est en 3ème Forme Normale (3FN) :
+- 1FN : Tous les attributs sont atomiques
+- 2FN : Pas de dépendance partielle (chaque attribut non-clé dépend de la totalité de la clé)
+- 3FN : Pas de dépendance transitive (aucun attribut non-clé ne dépend d'un autre attribut non-clé)
+
+
+REGLES DE SUPPRESSION EN CASCADE
+---------------------------------
+
+1. Suppression d'un utilisateur -> Suppression de tous ses trajets
+2. Suppression d'une agence -> Suppression de tous les trajets partant ou arrivant à cette agence
+
+
+INDEX POUR OPTIMISATION
+-----------------------
+
+idx_trajets_depart     : Optimise les requêtes de recherche par date de départ
+idx_trajets_places     : Optimise les requêtes filtrant sur les places disponibles
+idx_trajets_conducteur : Optimise les requêtes de recherche des trajets par conducteur
+
+
+VOLUMETRIE INITIALE
+-------------------
+
+UTILISATEURS  : 21 enregistrements (1 admin + 20 employés)
+AGENCES       : 12 enregistrements (12 villes)
+TRAJETS       : 0 enregistrement (à créer par les utilisateurs)

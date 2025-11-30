@@ -1,0 +1,91 @@
+MODELE CONCEPTUEL DE DONNEES (MCD)
+Application KLAXON - Covoiturage Entreprise
+=============================================
+
+ENTITES
+-------
+
+1. UTILISATEUR
+   - id (identifiant unique)
+   - nom
+   - prenom
+   - email
+   - mot_de_passe
+   - telephone
+   - role (employe ou admin)
+   - created_at
+
+2. AGENCE
+   - id (identifiant unique)
+   - nom_ville
+   - created_at
+
+3. TRAJET
+   - id (identifiant unique)
+   - date_heure_depart
+   - date_heure_arrivee
+   - places_totales
+   - places_disponibles
+   - created_at
+   - updated_at
+
+
+ASSOCIATIONS
+------------
+
+1. PROPOSE (UTILISATEUR -> TRAJET)
+   Cardinalités : 1,n - 1,1
+   Un utilisateur peut proposer plusieurs trajets (1,n)
+   Un trajet est proposé par un seul conducteur (1,1)
+
+   Propriétés : conducteur_id (clé étrangère vers UTILISATEUR)
+
+2. PART_DE (TRAJET -> AGENCE)
+   Cardinalités : 0,n - 1,1
+   Une agence peut être le point de départ de plusieurs trajets (0,n)
+   Un trajet part d'une seule agence de départ (1,1)
+
+   Propriétés : agence_depart_id (clé étrangère vers AGENCE)
+
+3. ARRIVE_A (TRAJET -> AGENCE)
+   Cardinalités : 0,n - 1,1
+   Une agence peut être le point d'arrivée de plusieurs trajets (0,n)
+   Un trajet arrive à une seule agence d'arrivée (1,1)
+
+   Propriétés : agence_arrivee_id (clé étrangère vers AGENCE)
+
+
+CONTRAINTES D'INTEGRITE
+------------------------
+
+1. Un utilisateur doit avoir un email unique
+2. Une agence doit avoir un nom de ville unique
+3. Le nombre de places disponibles ne peut pas dépasser le nombre de places totales
+4. Le nombre de places disponibles doit être supérieur ou égal à 0
+5. La date d'arrivée doit être postérieure à la date de départ
+6. L'agence de départ doit être différente de l'agence d'arrivée
+7. Le rôle d'un utilisateur doit être soit 'employe' soit 'admin'
+
+
+REGLES DE GESTION
+-----------------
+
+1. Un employé peut proposer plusieurs trajets
+2. Un employé ne peut modifier ou supprimer que ses propres trajets
+3. Un administrateur peut gérer tous les trajets
+4. Seul un administrateur peut créer, modifier ou supprimer des agences
+5. Les trajets affichés publiquement ne montrent que ceux avec des places disponibles
+6. Les trajets passés ne sont plus affichés sur la page d'accueil
+7. La suppression d'un utilisateur entraîne la suppression de ses trajets (cascade)
+8. La suppression d'une agence entraîne la suppression des trajets associés (cascade)
+
+
+REMARQUES
+---------
+
+- Le modèle utilise une relation ternaire implicite entre UTILISATEUR, AGENCE et TRAJET
+- Deux relations distinctes entre TRAJET et AGENCE permettent de différencier
+  le point de départ du point d'arrivée
+- La cardinalité (1,n) pour UTILISATEUR -> TRAJET indique qu'un utilisateur
+  doit proposer au moins un trajet pour apparaître dans la relation,
+  mais peut en proposer plusieurs
