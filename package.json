@@ -27,5 +27,16 @@
   "devDependencies": {
     "bootstrap": "^5.3.8",
     "sass": "^1.94.2"
+  },
+  "services": {
+  "mysql": {
+    "image": "mysql:8",
+    "env": {
+      "MYSQL_ROOT_PASSWORD": "root",
+      "MYSQL_DATABASE": "ma_base"
+    },
+    "ports": ["3306:3306"]
   }
+}
+
 }
